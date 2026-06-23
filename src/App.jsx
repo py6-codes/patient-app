@@ -24,8 +24,17 @@ function App() {
 
   return (
     <Routes>
+      <Route
+        path="/"
+        element={
+          isLoggedIn ? (
+            <Navigate to="/encounters" />
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
 
-      {/* LOGIN */}
       <Route
         path="/login"
         element={
@@ -37,7 +46,6 @@ function App() {
         }
       />
 
-      {/* ENCOUNTERS */}
       <Route
         path="/encounters"
         element={
@@ -52,7 +60,6 @@ function App() {
         }
       />
 
-      {/* PATIENTS */}
       <Route
         path="/patients"
         element={
@@ -67,7 +74,6 @@ function App() {
         }
       />
 
-      {/* PATIENT DETAILS */}
       <Route
         path="/patient-details"
         element={
@@ -81,7 +87,6 @@ function App() {
           )
         }
       />
-
     </Routes>
   );
 }
