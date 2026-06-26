@@ -1,20 +1,41 @@
-
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function Sidebar() {
+  const location = useLocation();
+
   return (
-    <div style={{ width: "200px", padding: "10px", borderRight: "1px solid #ccc" }}>
-      <h3>Menu</h3>
+    <div className="sidebar">
 
-      <ul style={{ listStyle: "none", padding: 0 }}>
+      <div className="sidebar-top">
+        <div className="hospital">🏥</div>
+
+        <h2>MediCare</h2>
+
+        <p>Patient Dashboard</p>
+      </div>
+
+      <ul>
+
         <li>
-          <Link to="/encounters">Encounters</Link>
+          <Link
+            className={location.pathname === "/encounters" ? "active" : ""}
+            to="/encounters"
+          >
+            🩺 Encounters
+          </Link>
         </li>
 
         <li>
-          <Link to="/patients">Patients</Link>
+          <Link
+            className={location.pathname === "/patients" ? "active" : ""}
+            to="/patients"
+          >
+            👨‍⚕️ Patients
+          </Link>
         </li>
+
       </ul>
+
     </div>
   );
 }

@@ -4,45 +4,70 @@ import { useNavigate } from "react-router-dom";
 function Login({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
   const handleLogin = () => {
+    if (!email || !password) {
+      setError("Please enter both email and password.");
+      return;
+    }
+
     if (email === "admin@gmail.com" && password === "1234") {
+      setError("");
       onLogin();
       navigate("/encounters");
     } else {
-      alert("Invalid credentials");
+      setError("Invalid email or password.");
     }
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Login</h2>
+    <div className="login-page">
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        name="email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
+      <div className="login-card">
 
-      <br /><br />
+        <h1>🏥 MediCare</h1>
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        name="password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        <p className="login-subtitle">
+          Welcome Back
+        </p>
 
-      <br /><br />
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setError("");
+          }}
+        />
 
-      <button onClick={handleLogin}>
-        Login
-      </button>
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            setError("");
+          }}
+        />
+
+        <button onClick={handleLogin}>
+          Login
+        </button>
+
+        {error && (
+          <p className="error">
+            {error}
+          </p>
+        )}
+
+      </div>
+
+      <div className="login-image"></div>
+
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import encountersData from "../data/encounters.json";
+import Table from "../components/Table";
 
 function Encounters() {
   const navigate = useNavigate();
@@ -53,14 +54,14 @@ function Encounters() {
     <>
       
 
-      <div style={{ display: "flex" }}>
+      <div className="page">
         <Sidebar />
 
-        <div style={{ flex: 1, padding: "20px" }}>
-          <h2>Encounters</h2>
+        <div className="content">
+          <h2 className="page-title">Encounters</h2>
 
           {/* FILTERS */}
-          <div style={{ marginBottom: 10 }}>
+          <div className="filters">
             <select
               value={consultationType}
               onChange={(e) => setConsultationType(e.target.value)}
@@ -77,61 +78,56 @@ function Encounters() {
 
             <input
               type="date"
+              value={fromDate}
               onChange={(e) => setFromDate(e.target.value)}
             />
 
             <input
               type="date"
+              value={toDate}
               onChange={(e) => setToDate(e.target.value)}
             />
           </div>
 
           {/* TABLE */}
-          <table border="1" width="100%" cellPadding="10">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Patient Name</th>
-                <th>Consultation Type</th>
+          <Table
+            columns={["Date", "Patient Name", "Consultation Type"]}
+          >
+            {paginated.map((e) => {
+            const patientId = e.patient?.id;
+
+            return (
+          <tr
+            key={e.id}
+            onClick={() => {
+            if (!patientId) return;
+
+            navigate(`/patient-details?id=${patientId}`, {
+              state: {
+              from: "encounters",
+              filters: {
+                consultationType,
+                fromDate,
+                toDate,
+                },
+                },
+              });
+            }}
+            >
+              <td>{e.date_of_service}</td>
+
+              <td>
+                {e.patient?.first_name} {e.patient?.last_name}
+              </td>
+
+              <td>{e.consultation_type}</td>
               </tr>
-            </thead>
-
-            <tbody>
-              {paginated.map((e) => {
-                const patientId = e.patient?.id;
-
-                return (
-                  <tr
-                    key={e.id}
-                    onClick={() => {
-                      if (!patientId) return;
-
-                      navigate(`/patient-details?id=${patientId}`, {
-                        state: {
-                          from: "encounters",
-                          filters: {
-                            consultationType,
-                            fromDate,
-                            toDate,
-                          },
-                        },
-                      });
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <td>{e.date_of_service}</td>
-                    <td>
-                      {e.patient?.first_name} {e.patient?.last_name}
-                    </td>
-                    <td>{e.consultation_type}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+            );
+          })}
+          </Table>
 
           {/* PAGINATION */}
-          <div style={{ marginTop: 10 }}>
+          <div className="pagination">
             <button disabled={page === 1} onClick={() => setPage(page - 1)}>
               Prev
             </button>

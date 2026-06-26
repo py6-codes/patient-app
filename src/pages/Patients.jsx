@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import patientsData from "../data/patients.json";
+import Table from "../components/Table";
 
 function Patients() {
   const navigate = useNavigate();
@@ -36,8 +37,8 @@ function Patients() {
 
   const toggleGender = (g) => {
     setGender((prev) =>
-      prev.includes(g)
-        ? prev.filter((x) => x !== g)
+      prev.includes(g) /*Adds or removes a gender from the selected gender list*/
+        ? prev.filter((x) => x !== g) /*removes a gender*/
         : [...prev, g]
     );
   };
@@ -45,13 +46,14 @@ function Patients() {
   return (
     <>
 
-      <div style={{ display: "flex" }}>
+      <div className="page">
         <Sidebar />
 
-        <div style={{ flex: 1, padding: "20px" }}>
-          <h2>Patients</h2>
+        <div className="content">
+          <h2 className="page-title">Patients</h2>
 
           {/* FILTERS */}
+          <div className="filters">
           <select
             value={referral}
             onChange={(e) => setReferral(e.target.value)}
@@ -91,43 +93,38 @@ function Patients() {
               Other
             </label>
           </div>
+          </div>
 
           {/* TABLE */}
-          <table border="1" width="100%" cellPadding="10">
-            <thead>
-              <tr>
-                <th>Email</th>
-                <th>Name</th>
-                <th>Gender</th>
-                <th>Referral</th>
-              </tr>
-            </thead>
+          <Table
+            columns={["Email", "Name", "Gender", "Referral"]}
+          >
+           {paginated.map((p) => (
+          <tr
+            key={p.id}
+           onClick={() =>
+           navigate(`/patient-details?id=${p.id}`, {
+           state: {
+             from: "patients",
+             filters: { referral, gender },
+                },
+            })
+          }
+           >
+           <td>{p.email}</td>
 
-            <tbody>
-              {paginated.map((p) => (
-                <tr
-                  key={p.id}
-                  onClick={() =>
-                    navigate(`/patient-details?id=${p.id}`, {
-                      state: {
-                        from: "patients",
-                        filters: { referral, gender },
-                      },
-                    })
-                  }
-                  style={{ cursor: "pointer" }}
-                >
-                  <td>{p.email}</td>
-                  <td>{p.first_name + " " + p.last_name}</td>
-                  <td>{p.gender}</td>
-                  <td>{p.referral_program}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <td>
+          {p.first_name} {p.last_name}
+         </td>
+          <td>{p.gender}</td>
+          <td>{p.referral_program}
+          </td>
+         </tr>
+         ))}
+        </Table>
 
           {/* PAGINATION */}
-          <div style={{ marginTop: 10 }}>
+          <div className="pagination">
             <button disabled={page === 1} onClick={() => setPage(page - 1)}>
               Prev
             </button>

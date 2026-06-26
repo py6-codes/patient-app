@@ -20,7 +20,7 @@ function PatientDetails() {
 
   const goBack = () => {
     navigate(from === "encounters" ? "/encounters" : "/patients", {
-      state: location.state,
+      state: location.state, 
     });
   };
 
